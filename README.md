@@ -1,5 +1,5 @@
 # blazepose-unity
-this project is based on [tf-lite-unity-sample](http://this project is based on https://github.com/asus4/tf-lite-unity-sample "tf-lite-unity-sample")
+this project is based on [tf-lite-unity-sample](https://github.com/asus4/tf-lite-unity-sample)
 
 In the sample scene you'll find a game object named `BlazePose`  that has the main script attached to it. 
 The `Custom Camera Name` field is used to specify a camera name - leave this blank for it to pick up the default camera.
