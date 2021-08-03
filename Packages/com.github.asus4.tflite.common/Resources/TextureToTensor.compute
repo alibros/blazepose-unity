@@ -1,0 +1,16 @@
+﻿// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel TextureToFloatTensor
+
+Texture2D<float4> InputTexture;
+int TextureWidth;
+int TextureHeight;
+
+RWStructuredBuffer<float3> OutputFloatTensor;
+
+[numthreads(8,8,1)]
+void TextureToFloatTensor(uint2 tid : SV_DispatchThreadID)
+{
+    uint gid = (TextureHeight - 1 - tid.y) * TextureWidth + tid.x;
+    float4 c = InputTexture[tid];
+    OutputFloatTensor[gid] = float3(c.x, c.y, c.z);
+}
