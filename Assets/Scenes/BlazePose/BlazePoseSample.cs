@@ -11,7 +11,9 @@ using UnityEngine.UI;
 /// </summary>
 public sealed class BlazePoseSample : MonoBehaviour
 {
-	[Header("Model files")]
+    public bool DrawStickFigure { get { return _drawStickFigure; } set { _drawStickFigure = value; } }
+
+    [Header("Model files")]
     [SerializeField, FilePopup("*.tflite")] string poseDetectionModelFile = "mediapipe/pose_detection.tflie";
     [SerializeField, FilePopup("*.tflite")] string poseLandmarkModelFile = "mediapipe/pose_landmarks.tflite";
 	
@@ -26,13 +28,63 @@ public sealed class BlazePoseSample : MonoBehaviour
 	
 	
 	[Header("Skeletal objects")] 
-	[SerializeField] GameObject leftHand;
-	[SerializeField] GameObject rightHand;
-	// [SerializeField] // for debug raw data
-	public Vector4[] worldJoints;
+	[SerializeField] GameObject nose;
+
+	[SerializeField] GameObject leftEyeInner;
+    [SerializeField] GameObject leftEye;
+	[SerializeField] GameObject leftEyeOuter;
+
+    [SerializeField] GameObject rightEyeInner;
+    [SerializeField] GameObject rightEye;
+    [SerializeField] GameObject rightEyeOuter;
+
+    [SerializeField] GameObject leftEar;
+    [SerializeField] GameObject rightEar;
+
+    [SerializeField] GameObject leftMouth;
+    [SerializeField] GameObject rightMouth;
+
+	[SerializeField] GameObject leftShoulder;
+    [SerializeField] GameObject rightShoulder;
+
+    [SerializeField] GameObject leftElbow;
+    [SerializeField] GameObject rightElbow;
+
+    [SerializeField] GameObject leftWrist;
+    [SerializeField] GameObject rightWrist;
+
+	[SerializeField] GameObject leftPinky;
+	[SerializeField] GameObject rightPinky;
+
+    [SerializeField] GameObject leftIndex;
+    [SerializeField] GameObject rightIndex;
+
+    [SerializeField] GameObject leftThumb;
+    [SerializeField] GameObject rightThumb;
+
+    [SerializeField] GameObject leftHip;
+    [SerializeField] GameObject rightHip;
+
+    [SerializeField] GameObject leftKnee;
+    [SerializeField] GameObject rightKnee;
+
+    [SerializeField] GameObject leftAnkle;
+    [SerializeField] GameObject rightAnkle;
+
+    [SerializeField] GameObject leftHeel;
+    [SerializeField] GameObject rightHeel;
+
+    [SerializeField] GameObject leftFootIndex;
+    [SerializeField] GameObject rightFootIndex;
+
+
+
+
+    // [SerializeField] // for debug raw data
+    public Vector4[] worldJoints;
 	
 	[Header("GUI Settings")]
-	[SerializeField] bool drawStickFigure = true;
+	[SerializeField] private bool _drawStickFigure = true;
 	[SerializeField] RawImage cameraView = null;
     [SerializeField] Canvas canvas = null;
 	
@@ -127,13 +179,68 @@ public sealed class BlazePoseSample : MonoBehaviour
         }
 		
 		
-		// Update the position of Left and Right hand game objects
+		// Update the position of game objects
 		if (worldJoints != null) {
-		leftHand.transform.position = new Vector3(worldJoints[15][0], worldJoints[15][1], worldJoints[15][2]);
-		rightHand.transform.position = new Vector3(worldJoints[16][0], worldJoints[16][1], worldJoints[16][2]);
-		}
+
+            nose.transform.position = GetPoseFor(PoseLandmarks.NOSE);
+
+            leftEyeInner.transform.position = GetPoseFor(PoseLandmarks.LEFT_EYE_INNER);
+            leftEye.transform.position = GetPoseFor(PoseLandmarks.LEFT_EYE);
+            leftEyeOuter.transform.position = GetPoseFor(PoseLandmarks.LEFT_EYE_OUTER);
+
+            rightEyeInner.transform.position = GetPoseFor(PoseLandmarks.RIGHT_EYE_INNER);
+            rightEye.transform.position = GetPoseFor(PoseLandmarks.RIGHT_EYE);
+            rightEyeOuter.transform.position = GetPoseFor(PoseLandmarks.RIGHT_EYE_OUTER);
+
+            leftEar.transform.position = GetPoseFor(PoseLandmarks.LEFT_EAR);
+            rightEar.transform.position = GetPoseFor(PoseLandmarks.RIGHT_EAR);
+
+            leftMouth.transform.position = GetPoseFor(PoseLandmarks.LEFT_MOUTH);
+            rightMouth.transform.position = GetPoseFor(PoseLandmarks.RIGHT_MOUTH);
+
+            leftShoulder.transform.position = GetPoseFor(PoseLandmarks.LEFT_SHOULDER);
+            rightShoulder.transform.position = GetPoseFor(PoseLandmarks.RIGHT_SHOULDER);
+
+            leftElbow.transform.position = GetPoseFor(PoseLandmarks.LEFT_ELBOW);
+            rightElbow.transform.position = GetPoseFor(PoseLandmarks.RIGHT_ELBOW);
+
+            leftWrist.transform.position = GetPoseFor(PoseLandmarks.LEFT_WRIST);
+            rightWrist.transform.position = GetPoseFor(PoseLandmarks.RIGHT_WRIST);
+
+            leftPinky.transform.position = GetPoseFor(PoseLandmarks.LEFT_PINKY);
+            rightPinky.transform.position = GetPoseFor(PoseLandmarks.RIGHT_PINKY);
+
+            leftIndex.transform.position = GetPoseFor(PoseLandmarks.LEFT_INDEX);
+            rightIndex.transform.position = GetPoseFor(PoseLandmarks.RIGHT_INDEX);
+
+            leftThumb.transform.position = GetPoseFor(PoseLandmarks.LEFT_THUMB);
+            rightThumb.transform.position = GetPoseFor(PoseLandmarks.RIGHT_THUMB);
+
+            leftHip.transform.position = GetPoseFor(PoseLandmarks.LEFT_HIP);
+            rightHip.transform.position = GetPoseFor(PoseLandmarks.RIGHT_HIP);
+
+            leftKnee.transform.position = GetPoseFor(PoseLandmarks.LEFT_KNEE);
+            rightKnee.transform.position = GetPoseFor(PoseLandmarks.RIGHT_KNEE);
+
+            leftAnkle.transform.position = GetPoseFor(PoseLandmarks.LEFT_ANKLE);
+            rightAnkle.transform.position = GetPoseFor(PoseLandmarks.RIGHT_ANKLE);
+
+            leftHeel.transform.position = GetPoseFor(PoseLandmarks.LEFT_HEEL);
+            rightHeel.transform.position = GetPoseFor(PoseLandmarks.RIGHT_HEEL);
+
+            leftFootIndex.transform.position = GetPoseFor(PoseLandmarks.LEFT_FOOT_INDEX);
+            rightFootIndex.transform.position = GetPoseFor(PoseLandmarks.RIGHT_FOOT_INDEX);
+        }
 		
-		
+    }
+
+
+    private Vector3 GetPoseFor(int jointId) {
+        if (worldJoints != null) {
+            return new Vector3(worldJoints[jointId][0], worldJoints[jointId][1], worldJoints[jointId][2]);
+        }
+
+        return Vector3.zero;
     }
 
     void DrawFrame(PoseDetect.Result pose)
@@ -211,7 +318,7 @@ public sealed class BlazePoseSample : MonoBehaviour
 		
 		
 		// Draw
-		if (drawStickFigure){
+		if (_drawStickFigure){
         for (int i = 0; i < worldJoints.Length; i++)
         {
             Vector4 p = worldJoints[i];
