@@ -16,8 +16,8 @@ public sealed class BlazePoseSample : MonoBehaviour
     [Header("Model files")]
     [SerializeField, FilePopup("*.tflite")] string poseDetectionModelFile = "mediapipe/pose_detection.tflie";
     [SerializeField, FilePopup("*.tflite")] string poseLandmarkModelFile = "mediapipe/pose_landmarks.tflite";
-	
-	[Header("Camera Settings")] 
+
+	[Header("Camera Settings")]
 	[Tooltip("Used when running on phones or tablets")]
 	[SerializeField] bool useFrontFacingCamera;
 	[Tooltip("example: FaceTime HD Camera (Built-in) " )]
@@ -25,9 +25,9 @@ public sealed class BlazePoseSample : MonoBehaviour
 	[SerializeField] int resolutionW = 1280;
 	[SerializeField] int resolutionH = 720;
 	[SerializeField] int frameRate = 30;
-	
-	
-	[Header("Skeletal objects")] 
+
+
+	[Header("Skeletal objects")]
 	[SerializeField] GameObject nose;
 
 	[SerializeField] GameObject leftEyeInner;
@@ -82,28 +82,29 @@ public sealed class BlazePoseSample : MonoBehaviour
 
     // [SerializeField] // for debug raw data
     public Vector4[] worldJoints;
-	
+
 	[Header("GUI Settings")]
 	[SerializeField] private bool _drawStickFigure = true;
 	[SerializeField] RawImage cameraView = null;
     [SerializeField] Canvas canvas = null;
-	
-	
+      [SerializeField] Text infoText = null;
+
+
 	[Header("Other Settings")]
     [SerializeField] bool useLandmarkFilter = true;
     [SerializeField] Vector3 filterVelocityScale = Vector3.one * 10;
     [SerializeField] bool runBackground;
     [SerializeField, Range(0f, 1f)] float visibilityThreshold = 0.5f;
 
-	
+
 
     WebCamTexture webcamTexture;
     PoseDetect poseDetect;
     PoseLandmarkDetect poseLandmark;
 
     Vector3[] rtCorners = new Vector3[4]; // just cache for GetWorldCorners
-   
-    
+
+
     PrimitiveDraw draw;
     PoseDetect.Result poseResult;
     PoseLandmarkDetect.Result landmarkResult;
@@ -114,29 +115,35 @@ public sealed class BlazePoseSample : MonoBehaviour
 
     void Start()
     {
-        // Init model
-        poseDetect = new PoseDetect(poseDetectionModelFile);
-        poseLandmark = new PoseLandmarkDetect(poseLandmarkModelFile);
+
+   infoText.text =  "Starting";
 
 
-        // Init camera 
+        // Init camera
         string cameraName = WebCamUtil.FindName(new WebCamUtil.PreferSpec()
         {
             isFrontFacing = useFrontFacingCamera,
             kind = WebCamKind.WideAngle,
         });
-	
+          infoText.text = "Camera: " + cameraName;
+
+
 		if (customCameraName != null) {
 		webcamTexture = new WebCamTexture(customCameraName, resolutionW, resolutionH, frameRate);
 		} else {
 	 	webcamTexture = new WebCamTexture(cameraName, resolutionW, resolutionH, frameRate);
 		}
-        
-		
+
+
         cameraView.texture = webcamTexture;
         webcamTexture.Play();
         Debug.Log($"Starting camera: {cameraName}");
 
+        // Init model
+        poseDetect = new PoseDetect(poseDetectionModelFile);
+        poseLandmark = new PoseLandmarkDetect(poseLandmarkModelFile);
+
+        infoText.text = "Camera: " + cameraName + "PosesInitied";
         draw = new PrimitiveDraw(Camera.main, gameObject.layer);
         worldJoints = new Vector4[PoseLandmarkDetect.JointCount];
 
@@ -175,10 +182,10 @@ public sealed class BlazePoseSample : MonoBehaviour
         {
             DrawCropMatrix(poseLandmark.CropMatrix);
             DrawJoints(landmarkResult.joints);
-			
+
         }
-		
-		
+
+
 		// Update the position of game objects
 		if (worldJoints != null) {
 
@@ -231,7 +238,7 @@ public sealed class BlazePoseSample : MonoBehaviour
             leftFootIndex.transform.position = GetPoseFor(PoseLandmarks.LEFT_FOOT_INDEX);
             rightFootIndex.transform.position = GetPoseFor(PoseLandmarks.RIGHT_FOOT_INDEX);
         }
-		
+
     }
 
 
@@ -314,9 +321,9 @@ public sealed class BlazePoseSample : MonoBehaviour
             // w is visibility
             worldJoints[i] = new Vector4(p.x, p.y, p.z, joints[i].w);
         }
-		
-		
-		
+
+
+
 		// Draw
 		if (_drawStickFigure){
         for (int i = 0; i < worldJoints.Length; i++)
@@ -395,7 +402,7 @@ public sealed class BlazePoseSample : MonoBehaviour
         }
         landmarkResult = await poseLandmark.InvokeAsync(webcamTexture, poseResult, useLandmarkFilter, cancellationToken, PlayerLoopTiming.Update);
 
-        // Back to the update timing from now on 
+        // Back to the update timing from now on
         if (cameraView != null)
         {
             cameraView.material = poseDetect.transformMat;
