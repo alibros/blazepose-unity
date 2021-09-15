@@ -100,14 +100,14 @@ public sealed class BlazePoseSample : MonoBehaviour
 
     WebCamTexture webcamTexture;
     PoseDetect poseDetect;
-    PoseLandmarkDetect poseLandmark;
+    public PoseLandmarkDetect poseLandmark;
 
     Vector3[] rtCorners = new Vector3[4]; // just cache for GetWorldCorners
 
 
     PrimitiveDraw draw;
     PoseDetect.Result poseResult;
-    PoseLandmarkDetect.Result landmarkResult;
+    public PoseLandmarkDetect.Result landmarkResult;
     UniTask<bool> task;
     CancellationToken cancellationToken;
 
