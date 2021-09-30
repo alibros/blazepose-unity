@@ -20,6 +20,8 @@ public sealed class BlazePoseSample : MonoBehaviour
 	[Header("Camera Settings")]
 	[Tooltip("Used when running on phones or tablets")]
 	[SerializeField] bool useFrontFacingCamera;
+  [Tooltip("Tick to run on a mac with FaceTime HD Camera")]
+  [SerializeField] bool useMacOSDefaultFaceTimeCamera;
 	[Tooltip("example: FaceTime HD Camera (Built-in) " )]
 	[SerializeField] string customCameraName;
 	[SerializeField] int resolutionW = 1280;
@@ -127,7 +129,9 @@ public sealed class BlazePoseSample : MonoBehaviour
         });
           infoText.text = "Camera: " + cameraName;
 
-
+    if (useMacOSDefaultFaceTimeCamera == true) {
+      customCameraName = "FaceTime HD Camera (Built-in)";
+    }
 		if (customCameraName != null) {
 		webcamTexture = new WebCamTexture(customCameraName, resolutionW, resolutionH, frameRate);
 		} else {

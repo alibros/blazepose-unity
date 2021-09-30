@@ -3533,6 +3533,7 @@ GameObject:
   - component: {fileID: 1453601107}
   - component: {fileID: 1453601106}
   - component: {fileID: 1453601108}
+  - component: {fileID: 1453601109}
   m_Layer: 0
   m_Name: BlazePose
   m_TagString: Untagged
@@ -3552,9 +3553,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac6c2ecddc84d4bfb931c1f8ad12eac7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  poseDetectionModelFile: mediapipe/pose_detection.tflite
-  poseLandmarkModelFile: mediapipe/pose_landmark_lite.tflite
+  poseDetectionModelFile: mediapipe/pose_detection/pose_detection.tflite
+  poseLandmarkModelFile: mediapipe/pose_landmark/pose_landmark_lite.tflite
   useFrontFacingCamera: 1
+  useMacOSDefaultFaceTimeCamera: 1
   customCameraName: 
   resolutionW: 1280
   resolutionH: 720
@@ -3597,10 +3599,10 @@ MonoBehaviour:
   cameraView: {fileID: 2074584278}
   canvas: {fileID: 1051232097}
   infoText: {fileID: 749049336}
-  useLandmarkFilter: 1
-  filterVelocityScale: {x: 10, y: 10, z: 2}
+  useLandmarkFilter: 0
+  filterVelocityScale: {x: 1, y: 1, z: 1}
   runBackground: 0
-  visibilityThreshold: 0.5
+  visibilityThreshold: 1
 --- !u!4 &1453601107
 Transform:
   m_ObjectHideFlags: 0
@@ -3622,12 +3624,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1453601105}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5c1bc00314ee44196871ddf020d0ee0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  poseModel: pose-det-model.tflite
+  poseModel: YMCA-14.tflite
   poseLabels: map.json
   jointsToShow:
   - {x: 0, y: 0, z: 0, w: 0}
@@ -3669,7 +3671,20 @@ MonoBehaviour:
   - 0
   - 0
   - 0
-  - 0
+  poseText: {fileID: 141027301}
+--- !u!114 &1453601109
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1453601105}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2cb12f97513964a74b45b1fd161dc68b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentPoseIndex: 0
   poseText: {fileID: 141027301}
 --- !u!1 &1476008906
 GameObject:
